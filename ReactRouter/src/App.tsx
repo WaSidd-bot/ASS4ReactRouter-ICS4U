@@ -1,17 +1,25 @@
-import { useState } from 'react'
-import './App.css'
-import { Footer } from './components/Footer'
+import { Route, Routes } from 'react-router'
+import { MainLayout } from '@/layouts';
+import { CreditsView, ErrorView, HomeView, MovieView, NowPlayingView, ReviewsView, SearchView, TrendingView } from '@/views';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export const App = () => {
   return (
-    <>
-  
+    <Routes>
+      <Route path="/" element={<HomeView />} />
+        <Route element={<MainLayout />}>
+          <Route path="/now-playing" element={<NowPlayingView />} />
+          <Route path="/trending" element={<TrendingView />} />
+          <Route path="/search" element={<SearchView />} />
+          <Route path="/movie/:id" element={<MovieView />}>
+            <Route path="credits" element={<CreditsView />} />
+            <Route path="reviews" element={<ReviewsView />} />
+          </Route>
+        </Route>
+      <Route path="*" element={<ErrorView />} />
+    </Routes>
+  );
+};
 
-      <Footer/>
-    </>
-  )
-}
+
 
 export default App

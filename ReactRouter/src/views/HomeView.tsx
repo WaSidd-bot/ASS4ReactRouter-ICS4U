@@ -1,4 +1,4 @@
-import { Button } from '@/components';
+import { Button } from '@/components/Button';
 import { useNavigate } from 'react-router';
 
 export const HomeView = () => {

@@ -1,20 +1,17 @@
-import { ButtonGroup } from '@/components/ButtonGroup';
 import { ImageGrid } from '@/components/ImageGrid';
 import { Pagination } from '@/components/Pagination';
 import { getImageUrl } from '@/core/images';
+import { NOW_PLAYING_ENDPOINT } from '@/core/endpointConstants';
 import { type ImageCell } from '@/core/componentTypes';
 import { type MovieRespsonse } from '@/core/endpointTypes';
-import { TRENDING_ENDPOINT } from '@/core/endpointConstants';
 import { useTmdb } from '@/hooks';
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useNavigate } from 'react-router';
 
-export const TrendingView = () => {
+export const NowPlayingView = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const interval = searchParams.get('interval') || 'day';
-  const { data } = useTmdb<MovieRespsonse>(`${TRENDING_ENDPOINT}/${interval}`, { page, time_window: interval });
+  const { data } = useTmdb<MovieRespsonse>(NOW_PLAYING_ENDPOINT, { page });
 
   const gridData: ImageCell[] = (data?.results ?? []).map((result) => ({
     id: result.id,
@@ -28,17 +25,7 @@ export const TrendingView = () => {
 
   return (
     <section className="mx-auto max-w-7xl space-y-5 p-5">
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Trending</h1>
-        <ButtonGroup
-          value={interval}
-          options={[
-            { label: 'Today', value: 'day' },
-            { label: 'Week', value: 'week' },
-          ]}
-          onClick={(value) => setSearchParams({ interval: value })}
-        />
-      </div>
+      <h1 className="mb-4 text-3xl font-bold">Now Playing</h1>
       <ImageGrid images={gridData} onClick={(image) => navigate(`/movie/${image.id}/credits`)} />
       <Pagination page={page} maxPages={data.total_pages} onClick={setPage} />
     </section>
