@@ -38,3 +38,7 @@ export type ReviewsResponse = {
     content: string;
   }>;
 };
+
+export type TelevisionResponse = {
+
+}

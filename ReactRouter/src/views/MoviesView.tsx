@@ -1,17 +1,20 @@
 import { ImageGrid } from '@/components/ImageGrid';
 import { Pagination } from '@/components/Pagination';
 import { getImageUrl } from '@/core/images';
-import { NOW_PLAYING_ENDPOINT } from '@/core/endpointConstants';
+import { ButtonGroup } from '@/components/ButtonGroup';
+import { MOVIE_ENDPOINT } from '@/core/endpointConstants';
 import { type ImageCell } from '@/core/componentTypes';
 import { type MovieRespsonse } from '@/core/endpointTypes';
 import { useTmdb } from '@/hooks';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 
-export const NowPlayingView = () => {
+export const MoviesView = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
-  const { data } = useTmdb<MovieRespsonse>(NOW_PLAYING_ENDPOINT, { page });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const category = searchParams.get('category') || 'now_playing';
+  const { data } = useTmdb<MovieRespsonse>(`${MOVIE_ENDPOINT}/${category}`, { page, time_window: category });
 
   const gridData: ImageCell[] = (data?.results ?? []).map((result) => ({
     id: result.id,
@@ -25,7 +28,18 @@ export const NowPlayingView = () => {
 
   return (
     <section className="mx-auto max-w-7xl space-y-5 p-5">
-      <h1 className="mb-4 text-3xl font-bold">Now Playing</h1>
+      <h1 className="mb-4 text-3xl font-bold">Movies</h1>
+
+      <ButtonGroup
+        value={category}
+        options={[
+          { label: 'Now Playing', value: 'now_playing' },
+          { label: 'Top Rated', value: 'top_rated' },
+          { label: 'Popular', value: 'popular' },
+          { label: 'Upcoming', value: 'upcoming' },
+        ]}
+        onClick={(value) => setSearchParams({ category: value })}
+      />
       <ImageGrid images={gridData} onClick={(image) => navigate(`/movie/${image.id}/credits`)} />
       <Pagination page={page} maxPages={data.total_pages} onClick={setPage} />
     </section>

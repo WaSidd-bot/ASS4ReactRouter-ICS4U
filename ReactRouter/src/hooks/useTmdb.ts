@@ -6,12 +6,12 @@ export function useTmdb<T>(url: string, params: Record<string, unknown>) {
 
   useEffect(() => {
     const controller = new AbortController();
-    //console.log(import.meta.env.VITE_TMDB_API_KEY);
+    console.log(import.meta.env.VITE_REACT_APP_API_KEY);
     const fetchData = async () => {
       try {
         const response = await axios.get<T>(url, {
           params: {
-            api_key: '', //replace this with actual key that you have in .env
+            api_key: import.meta.env.VITE_REACT_APP_API_KEY, //replace this with actual key that you have in .env
             ...params,
           },
           signal: controller.signal,
