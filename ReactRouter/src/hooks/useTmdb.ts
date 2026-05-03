@@ -11,7 +11,7 @@ export function useTmdb<T>(url: string, params: Record<string, unknown>) {
       try {
         const response = await axios.get<T>(url, {
           params: {
-            api_key: import.meta.env.VITE_REACT_APP_API_KEY, //replace this with actual key that you have in .env
+            api_key: import.meta.env.VITE_REACT_APP_API_KEY,
             ...params,
           },
           signal: controller.signal,
